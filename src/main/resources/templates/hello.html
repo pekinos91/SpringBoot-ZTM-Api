@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lokalizacja autobusów ZTM Gdańsk</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css" type="text/css">
+    <style>
+      .map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
+</head>
+<body>
+
+<tr th:each="vehicle: ${vehicles}">
+    <td th:text="${vehicle.lon}" />
+    <td th:text="${vehicle.lat}" />
+
+</tr>
+
+<h2>My Map</h2>
+<div id="map" class="map"></div>
+<!--<div id="marker" title="Marker"><img src="https://cdn.mapmarker.io/api/v1/fa/stack?size=50&color=DC4C3F&icon=fa-microchip&hoffset=1" /></div>-->
+
+<script  >
+var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({
+            projection:"EPSG:4326",
+            center: [18.549819946289062, 54.35268020629883],
+            zoom: 6,
+            minzoom: 6,
+            maxzoom: 12
+        })
+    });
+
+</script>
+<!--th:each="vehicle: ${vehicles}"-->
+<script th:inline="javascript" >
+/*[# th:each="vehicle : ${vehicles}"]*/
+var lon = /*[[${vehicle.lon}]]*/ lon;
+var lat = /*[[${vehicle.lat}]]*/ lat;
+
+
+
+ var element = document.createElement('div');
+                    element.innerHTML = '<img src="https://cdn.mapmarker.io/api/v1/fa/stack?size=50&color=DC4C3F&icon=fa-microchip&hoffset=1" />';
+                    var marker = new ol.Overlay({
+                        position: [lon, lat],
+                        positioning: 'center-center',
+                        element: element,
+                        stopEvent: false
+                    });
+                     map.addOverlay(marker);
+/*[/]*/
+
+</script>
+
+
+</body>
+</html>
